@@ -32,9 +32,9 @@
 
 | Component | Status | Assigned To | Branch | Notes |
 |---|---|---|---|---|
-| WhatsApp (`whatsapp-web.js`) | 📋 Todo | — | — | QR scan → real-time message stream |
+| WhatsApp (`whatsapp-web.js`) | 📋 Todo | — | — | QR scan → real-time message stream (spare SIM for bot output) |
 | Gmail | 📋 Todo | — | — | Gmail API + Google OAuth |
-| Telegram | 📋 Todo | — | — | Official Telegram API |
+| Telegram | 📋 Todo | — | — | Official Telegram API — dual role: data source + briefing output channel |
 | Google Keep | 📋 Todo | — | — | Google API |
 | Notion | 📋 Todo | — | — | Notion API |
 | Discord | 📋 Todo | — | — | Discord bot API |
@@ -49,10 +49,14 @@
 |---|---|---|---|---|
 | Archive — semantic search | 📋 Todo | — | — | Query vector DB via LLM |
 | Archive — chat UI | 📋 Todo | — | — | Depends on semantic search |
+| Archive — voice interface | 📋 Todo | — | — | Whisper STT → piped into Archive query |
 | Ego — analysis job | 📋 Todo | — | — | Scheduled LLM pattern finder |
 | Ego — insights dashboard | 📋 Todo | — | — | Depends on analysis job |
+| Ego — emotion timeline | 📋 Todo | — | — | Sentiment tracking across sources visualized over time |
 | Drift — goals input | 📋 Todo | — | — | User sets goals once |
 | Drift — deviation alerts | 📋 Todo | — | — | Depends on Ego + goals input |
+| Relationship Intelligence | 📋 Todo | — | — | 4th AI layer — tracks how relationships evolve over time across sources |
+| Morning Briefing | 📋 Todo | — | — | Telegram bot delivers daily AI-generated briefing from Archive + Ego + Drift |
 
 ---
 
@@ -65,6 +69,9 @@
 | Archive chat page | 📋 Todo | — | — | |
 | Ego insights page | 📋 Todo | — | — | |
 | Drift goals page | 📋 Todo | — | — | |
+| Relationship Intelligence page | 📋 Todo | — | — | |
+| Emotion Timeline page | 📋 Todo | — | — | Sentiment graph over time |
+| Visual Knowledge Graph | 📋 Todo | — | — | Animated constellation of topics/people/connections — expo showstopper |
 
 ---
 

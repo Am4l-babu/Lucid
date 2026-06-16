@@ -6,7 +6,6 @@ import os
 load_dotenv()
 
 from routers.gmail import router as gmail_router
-
 app = FastAPI(title="Lucid API")
 
 app.add_middleware(
@@ -18,7 +17,6 @@ app.add_middleware(
 )
 
 app.include_router(gmail_router)
-
 
 @app.get("/health")
 def health():

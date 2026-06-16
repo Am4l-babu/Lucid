@@ -21,7 +21,7 @@
 
 | Component | Status | Assigned To | Branch | Notes |
 |---|---|---|---|---|
-| Project setup & folder structure | 📋 Todo | — | — | Next.js + FastAPI scaffold |
+| Project setup & folder structure | 🔄 Ongoing | Atul013 | feature/project-setup | Next.js + FastAPI scaffold |
 | ChromaDB setup | 📋 Todo | — | — | Local vector DB |
 | Ingestion pipeline (chunk + embed) | 📋 Todo | — | — | Depends on ChromaDB |
 | Google OAuth | 📋 Todo | — | — | Needed for Gmail, Keep, Calendar |
@@ -89,4 +89,5 @@
 | Date | User | Action |
 |---|---|---|
 | 2026-06-15 | Atul013 | Project initialized |
+| 2026-06-16 | Atul013 | Started project setup & folder structure |
 

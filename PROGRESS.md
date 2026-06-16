@@ -33,7 +33,7 @@
 | Component | Status | Assigned To | Branch | Notes |
 |---|---|---|---|---|
 | WhatsApp (`whatsapp-web.js`) | 📋 Todo | — | — | QR scan → real-time message stream (spare SIM for bot output) |
-| Gmail | 📋 Todo | — | — | Gmail API + Google OAuth |
+| Gmail | 🔄 Ongoing | Atul013 | feature/gmail-connector | Gmail API + Google OAuth |
 | Telegram | 📋 Todo | — | — | Official Telegram API — dual role: data source + briefing output channel |
 | Google Keep | 📋 Todo | — | — | Google API |
 | Notion | 📋 Todo | — | — | Notion API |
@@ -90,4 +90,5 @@
 |---|---|---|
 | 2026-06-15 | Atul013 | Project initialized |
 | 2026-06-16 | Atul013 | Started project setup & folder structure |
+| 2026-06-16 | Atul013 | Started Gmail connector |
 

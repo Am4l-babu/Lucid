@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from scalar_fastapi import get_scalar_api_reference
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-from routers.gmail import router as gmail_router
-app = FastAPI(title="Lucid API")
+from app.routers.gmail import router as gmail_router
+
+app = FastAPI(title="Lucid API", docs_url=None, redoc_url=None)
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,6 +19,12 @@ app.add_middleware(
 )
 
 app.include_router(gmail_router)
+
+
+@app.get("/docs", include_in_schema=False)
+def docs():
+    return get_scalar_api_reference(openapi_url="/openapi.json", title="Lucid API")
+
 
 @app.get("/health")
 def health():

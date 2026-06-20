@@ -31,25 +31,32 @@ function shortDate(date: string): string {
 }
 
 type Conn = "checking" | "connected" | "disconnected";
+type Mode = "search" | "ask";
 type Sync =
   | { kind: "idle" }
   | { kind: "syncing" }
   | { kind: "done"; n: number }
   | { kind: "error" };
-type Search =
+type SearchState =
   | { kind: "idle" }
   | { kind: "loading" }
   | { kind: "error" }
   | { kind: "done"; query: string; results: Result[] };
+type AskState =
+  | { kind: "idle" }
+  | { kind: "loading" }
+  | { kind: "error" }
+  | { kind: "done"; question: string; answer: string; sources: Result[] };
 
 export default function Archive() {
   const [conn, setConn] = useState<Conn>("checking");
+  const [mode, setMode] = useState<Mode>("ask");
   const [sync, setSync] = useState<Sync>({ kind: "idle" });
-  const [search, setSearch] = useState<Search>({ kind: "idle" });
+  const [search, setSearch] = useState<SearchState>({ kind: "idle" });
+  const [ask, setAsk] = useState<AskState>({ kind: "idle" });
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // If we just returned from the OAuth callback, drop the ?connected flag.
     if (new URLSearchParams(window.location.search).has("connected")) {
       window.history.replaceState({}, "", window.location.pathname);
     }
@@ -71,20 +78,41 @@ export default function Archive() {
     }
   }
 
-  async function runSearch(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const q = inputRef.current?.value.trim();
     if (!q) return;
-    setSearch({ kind: "loading" });
-    try {
-      const r = await fetch(
-        `${API}/gmail/search?q=${encodeURIComponent(q)}&n=10`,
-      );
-      if (!r.ok) throw new Error();
-      const d = await r.json();
-      setSearch({ kind: "done", query: q, results: d.results ?? [] });
-    } catch {
-      setSearch({ kind: "error" });
+    if (mode === "search") {
+      setSearch({ kind: "loading" });
+      try {
+        const r = await fetch(
+          `${API}/gmail/search?q=${encodeURIComponent(q)}&n=10`,
+        );
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        setSearch({ kind: "done", query: q, results: d.results ?? [] });
+      } catch {
+        setSearch({ kind: "error" });
+      }
+    } else {
+      setAsk({ kind: "loading" });
+      try {
+        const r = await fetch(`${API}/archive/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: q }),
+        });
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        setAsk({
+          kind: "done",
+          question: q,
+          answer: d.answer ?? "",
+          sources: d.sources ?? [],
+        });
+      } catch {
+        setAsk({ kind: "error" });
+      }
     }
   }
 
@@ -100,8 +128,8 @@ export default function Archive() {
           </span>
         </div>
         <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-muted">
-          Search everything you&rsquo;ve written and received — by meaning, not
-          keywords.
+          Ask your archive anything, or search it by meaning — everything
+          you&rsquo;ve written and received.
         </p>
       </header>
 
@@ -128,7 +156,7 @@ export default function Archive() {
 
       {conn === "connected" && (
         <>
-          <div className="mb-10 flex items-center justify-between border-y border-line py-3">
+          <div className="mb-8 flex items-center justify-between border-y border-line py-3">
             <span className="flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.15em] text-muted">
               <span
                 className="h-1.5 w-1.5 rounded-full bg-accent"
@@ -150,9 +178,27 @@ export default function Archive() {
             </button>
           </div>
 
-          <form onSubmit={runSearch} className="group relative">
+          <div className="mb-6 flex gap-6" role="tablist" aria-label="Mode">
+            {(["ask", "search"] as Mode[]).map((m) => (
+              <button
+                key={m}
+                role="tab"
+                aria-selected={mode === m}
+                onClick={() => setMode(m)}
+                className={`cursor-pointer pb-1 text-[0.7rem] font-medium uppercase tracking-[0.2em] transition-colors ${
+                  mode === m
+                    ? "border-b border-accent text-ink"
+                    : "text-faint hover:text-muted"
+                }`}
+              >
+                {m === "ask" ? "Ask" : "Search"}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={onSubmit} className="group relative">
             <label htmlFor="q" className="sr-only">
-              Search your archive
+              {mode === "ask" ? "Ask your archive" : "Search your archive"}
             </label>
             <div className="flex items-center gap-3 border-b border-ink pb-3 transition-colors focus-within:border-accent">
               <SearchGlyph className="h-5 w-5 shrink-0 text-faint transition-colors group-focus-within:text-accent" />
@@ -162,15 +208,19 @@ export default function Archive() {
                 type="search"
                 autoComplete="off"
                 autoFocus
-                placeholder="a conversation, a feeling, a person&hellip;"
+                placeholder={
+                  mode === "ask"
+                    ? "what did I say about…"
+                    : "a conversation, a feeling, a person…"
+                }
                 className="w-full bg-transparent font-display text-2xl leading-tight text-ink outline-none placeholder:text-faint sm:text-3xl"
               />
               <button
                 type="submit"
-                aria-label="Search"
+                aria-label={mode === "ask" ? "Ask" : "Search"}
                 className="shrink-0 cursor-pointer self-stretch px-2 text-[0.7rem] font-medium uppercase tracking-[0.15em] text-faint transition-colors hover:text-accent"
               >
-                Enter
+                {mode === "ask" ? "Ask" : "Enter"}
               </button>
             </div>
           </form>
@@ -179,55 +229,109 @@ export default function Archive() {
             {sync.kind === "error" && (
               <Notice>Sync failed. Try again in a moment.</Notice>
             )}
-            {search.kind === "loading" && <Skeleton />}
-            {search.kind === "error" && (
-              <Notice>
-                Couldn&rsquo;t reach the archive. Is the backend running on{" "}
-                <span className="tabular-nums">localhost:8000</span>?
-              </Notice>
-            )}
-            {search.kind === "done" && search.results.length === 0 && (
-              <Notice>
-                Nothing matches{" "}
-                <span className="text-ink">&ldquo;{search.query}&rdquo;</span>{" "}
-                yet. Try a sync, or different words.
-              </Notice>
-            )}
-            {search.kind === "done" && search.results.length > 0 && (
-              <>
-                <p className="mb-8 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-faint">
-                  <span className="tabular-nums">{search.results.length}</span>{" "}
-                  result{search.results.length === 1 ? "" : "s"}
-                </p>
-                <ul className="divide-y divide-line">
-                  {search.results.map((r, i) => (
-                    <li key={i} className="py-6 first:pt-0">
-                      <h2 className="font-display text-xl leading-snug text-ink">
-                        {decode(r.subject) || "(no subject)"}
-                      </h2>
-                      <p className="mt-1.5 text-[0.7rem] font-medium uppercase tracking-[0.15em] text-faint">
-                        {senderName(r.from)}
-                        {shortDate(r.date) && (
-                          <>
-                            <span className="mx-2 text-line">/</span>
-                            <span className="tabular-nums normal-case tracking-normal">
-                              {shortDate(r.date)}
-                            </span>
-                          </>
-                        )}
-                      </p>
-                      <p className="mt-3 line-clamp-2 text-[0.95rem] leading-relaxed text-muted">
-                        {decode(r.text)}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
+
+            {mode === "ask" && <AskView state={ask} />}
+            {mode === "search" && <SearchView state={search} />}
           </section>
         </>
       )}
     </main>
+  );
+}
+
+function AskView({ state }: { state: AskState }) {
+  if (state.kind === "loading")
+    return <p className="text-[0.95rem] text-faint">Reading your archive&hellip;</p>;
+  if (state.kind === "error")
+    return (
+      <Notice>
+        Couldn&rsquo;t reach the archive. Is the backend running on{" "}
+        <span className="tabular-nums">localhost:8000</span>?
+      </Notice>
+    );
+  if (state.kind !== "done") return null;
+
+  return (
+    <div>
+      <p className="whitespace-pre-wrap font-display text-xl leading-relaxed text-ink">
+        {state.answer}
+      </p>
+      {state.sources.length > 0 && (
+        <div className="mt-12 border-t border-line pt-8">
+          <p className="mb-6 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-faint">
+            Drawn from
+          </p>
+          <ul className="space-y-4">
+            {state.sources.map((r, i) => (
+              <li key={i} className="text-[0.85rem] leading-snug">
+                <span className="text-ink">{decode(r.subject) || "(no subject)"}</span>
+                <span className="mt-0.5 block text-[0.7rem] font-medium uppercase tracking-[0.15em] text-faint">
+                  {senderName(r.from)}
+                  {shortDate(r.date) && (
+                    <span className="tabular-nums normal-case tracking-normal">
+                      <span className="mx-2 text-line">/</span>
+                      {shortDate(r.date)}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SearchView({ state }: { state: SearchState }) {
+  if (state.kind === "loading") return <Skeleton />;
+  if (state.kind === "error")
+    return (
+      <Notice>
+        Couldn&rsquo;t reach the archive. Is the backend running on{" "}
+        <span className="tabular-nums">localhost:8000</span>?
+      </Notice>
+    );
+  if (state.kind !== "done") return null;
+  if (state.results.length === 0)
+    return (
+      <Notice>
+        Nothing matches{" "}
+        <span className="text-ink">&ldquo;{state.query}&rdquo;</span> yet. Try a
+        sync, or different words.
+      </Notice>
+    );
+
+  return (
+    <>
+      <p className="mb-8 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-faint">
+        <span className="tabular-nums">{state.results.length}</span> result
+        {state.results.length === 1 ? "" : "s"}
+      </p>
+      <ul className="divide-y divide-line">
+        {state.results.map((r, i) => (
+          <li key={i} className="py-6 first:pt-0">
+            <h2 className="font-display text-xl leading-snug text-ink">
+              {decode(r.subject) || "(no subject)"}
+            </h2>
+            <p className="mt-1.5 text-[0.7rem] font-medium uppercase tracking-[0.15em] text-faint">
+              {senderName(r.from)}
+              {shortDate(r.date) && (
+                <>
+                  <span className="mx-2 text-line">/</span>
+                  <span className="tabular-nums normal-case tracking-normal">
+                    {shortDate(r.date)}
+                  </span>
+                </>
+              )}
+            </p>
+            <p className="mt-3 line-clamp-2 text-[0.95rem] leading-relaxed text-muted">
+              {decode(r.text)}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 

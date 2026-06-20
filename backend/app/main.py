@@ -7,6 +7,9 @@ import os
 load_dotenv()
 
 from app.routers.gmail import router as gmail_router
+from app.routers.archive import router as archive_router
+from app.routers.ego import router as ego_router
+from app.routers.drift import router as drift_router
 
 app = FastAPI(title="Lucid API", docs_url=None, redoc_url=None)
 
@@ -19,6 +22,9 @@ app.add_middleware(
 )
 
 app.include_router(gmail_router)
+app.include_router(archive_router)
+app.include_router(ego_router)
+app.include_router(drift_router)
 
 
 @app.get("/docs", include_in_schema=False)

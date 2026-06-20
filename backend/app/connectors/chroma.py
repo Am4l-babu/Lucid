@@ -31,3 +31,16 @@ def search_emails(query: str, n_results: int = 10) -> list[dict]:
     docs = results["documents"][0]
     metas = results["metadatas"][0]
     return [{"text": d, **m} for d, m in zip(docs, metas)]
+
+
+def count() -> int:
+    return _collection().count()
+
+
+def sample(limit: int = 60) -> list[dict]:
+    """A slice of the whole archive, for analysis jobs (not a query)."""
+    data = _collection().get(limit=limit, include=["documents", "metadatas"])
+    return [
+        {"text": d, **m}
+        for d, m in zip(data["documents"], data["metadatas"])
+    ]

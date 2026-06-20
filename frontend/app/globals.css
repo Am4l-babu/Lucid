@@ -32,6 +32,27 @@ body {
   color: var(--color-paper);
 }
 
+/* Scrollbar that matches the paper/ink palette */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-faint) transparent;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-faint);
+  border-radius: 999px;
+  border: 3px solid var(--color-paper);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

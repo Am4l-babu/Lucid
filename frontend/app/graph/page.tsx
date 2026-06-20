@@ -152,16 +152,17 @@ function Constellation({ graph }: { graph: Graph }) {
     }
     resize();
 
-    // Initialise nodes in a ring around the centre.
+    // Scatter nodes across a disc so they settle organically, not on a ring.
     const nodes: Sim[] = graph.nodes.map((n, i) => {
-      const a = (i / graph.nodes.length) * Math.PI * 2;
+      const a = (i / graph.nodes.length) * Math.PI * 2 + Math.random();
+      const rad = 60 + Math.random() * 140;
       return {
         ...n,
-        x: W / 2 + Math.cos(a) * 120,
-        y: H / 2 + Math.sin(a) * 120,
+        x: W / 2 + Math.cos(a) * rad,
+        y: H / 2 + Math.sin(a) * rad,
         vx: 0,
         vy: 0,
-        r: 4 + Math.min(10, (n.weight ?? 3)) * 0.9,
+        r: 5 + Math.min(10, n.weight ?? 3) * 1.1,
       };
     });
     const byId = new Map(nodes.map((n) => [n.id, n]));
@@ -178,6 +179,10 @@ function Constellation({ graph }: { graph: Graph }) {
     function step() {
       const cx = W / 2;
       const cy = H / 2;
+      // Elliptical "bowl" the nodes float inside — margins leave room for
+      // labels, so nothing clips and there are no hard walls to slam into.
+      const rx = W / 2 - 90;
+      const ry = H / 2 - 56;
       for (const n of nodes) {
         let fx = 0;
         let fy = 0;
@@ -186,20 +191,21 @@ function Constellation({ graph }: { graph: Graph }) {
           const dx = n.x - m.x;
           const dy = n.y - m.y;
           const d2 = dx * dx + dy * dy + 0.01;
-          const f = 2200 / d2;
+          const f = 2600 / d2;
           fx += f * dx;
           fy += f * dy;
         }
-        fx += (cx - n.x) * 0.012;
-        fy += (cy - n.y) * 0.012;
-        n.vx = (n.vx + fx) * 0.82;
-        n.vy = (n.vy + fy) * 0.82;
+        // gentle pull to centre + a touch of life so it never freezes
+        fx += (cx - n.x) * 0.01 + (Math.random() - 0.5) * 0.25;
+        fy += (cy - n.y) * 0.01 + (Math.random() - 0.5) * 0.25;
+        n.vx = (n.vx + fx) * 0.85;
+        n.vy = (n.vy + fy) * 0.85;
       }
       for (const { a, b } of edges) {
         const dx = b.x - a.x;
         const dy = b.y - a.y;
         const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
-        const diff = (d - 110) * 0.02;
+        const diff = (d - 130) * 0.018;
         const ux = dx / d;
         const uy = dy / d;
         a.vx += ux * diff;
@@ -208,9 +214,23 @@ function Constellation({ graph }: { graph: Graph }) {
         b.vy -= uy * diff;
       }
       for (const n of nodes) {
-        n.x = Math.max(n.r + 4, Math.min(W - n.r - 4, n.x + n.vx));
-        n.y = Math.max(n.r + 4, Math.min(H - n.r - 4, n.y + n.vy));
+        n.x += n.vx;
+        n.y += n.vy;
+        // soft radial containment: ease back in past the ellipse edge
+        const ex = (n.x - cx) / rx;
+        const ey = (n.y - cy) / ry;
+        const dist = Math.hypot(ex, ey);
+        if (dist > 1) {
+          n.x = cx + (ex / dist) * rx;
+          n.y = cy + (ey / dist) * ry;
+          n.vx *= -0.4;
+          n.vy *= -0.4;
+        }
       }
+    }
+
+    function clip(label: string): string {
+      return label.length > 22 ? label.slice(0, 21).trimEnd() + "…" : label;
     }
 
     function draw() {
@@ -218,33 +238,51 @@ function Constellation({ graph }: { graph: Graph }) {
       const hovered = hoverRef.current;
       const near = hovered ? neighbours.get(hovered) : null;
 
-      // edges
+      // edges — soft, curved a touch via quadratic toward centre bias
       for (const { a, b } of edges) {
         const active = hovered && (a.id === hovered || b.id === hovered);
-        ctx.strokeStyle = active ? COLORS.accent : COLORS.line;
-        ctx.lineWidth = active ? 1.4 : 0.8;
+        ctx.globalAlpha = active ? 0.9 : hovered ? 0.15 : 0.4;
+        ctx.strokeStyle = active ? COLORS.accent : COLORS.faint;
+        ctx.lineWidth = active ? 1.3 : 0.7;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
       }
+      ctx.globalAlpha = 1;
 
       // nodes + labels
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (const n of nodes) {
-        const dim =
-          hovered && n.id !== hovered && !near?.has(n.id) ? 0.35 : 1;
-        ctx.globalAlpha = dim;
         const isPerson = n.type === "person";
+        const color = isPerson ? COLORS.ink : COLORS.accent;
+        const focused = !hovered || n.id === hovered || near?.has(n.id);
+        ctx.globalAlpha = focused ? 1 : 0.28;
+
+        // glow halo
+        ctx.shadowColor = color;
+        ctx.shadowBlur = n.id === hovered ? 22 : focused ? 12 : 0;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = isPerson ? COLORS.ink : COLORS.accent;
+        ctx.fillStyle = color;
         ctx.fill();
+        ctx.shadowBlur = 0;
 
-        ctx.font = `${isPerson ? 12 : 11}px "Hanken Grotesk", sans-serif`;
-        ctx.fillStyle = isPerson ? COLORS.ink : COLORS.accent;
-        ctx.fillText(n.label, n.x, n.y + n.r + 9, 140);
+        // ring accent on people for a little hierarchy
+        if (isPerson) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r + 3, 0, Math.PI * 2);
+          ctx.strokeStyle = color;
+          ctx.globalAlpha = focused ? 0.25 : 0.1;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.globalAlpha = focused ? 1 : 0.28;
+        }
+
+        ctx.font = `${isPerson ? 600 : 500} 11px "Hanken Grotesk", sans-serif`;
+        ctx.fillStyle = color;
+        ctx.fillText(clip(n.label), n.x, n.y + n.r + 11);
         ctx.globalAlpha = 1;
       }
     }
@@ -288,7 +326,7 @@ function Constellation({ graph }: { graph: Graph }) {
   return (
     <canvas
       ref={canvasRef}
-      className="h-[60vh] min-h-[420px] w-full rounded-sm border border-line"
+      className="h-[68vh] min-h-[460px] w-full touch-none"
       role="img"
       aria-label="Force-directed graph of people and themes in your archive"
     />

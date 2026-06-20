@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/ego", label: "Ego" },
   { href: "/drift", label: "Drift" },
   { href: "/graph", label: "Graph" },
+  { href: "/relationships", label: "People" },
 ];
 
 export default function Nav() {

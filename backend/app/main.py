@@ -11,6 +11,7 @@ from app.routers.archive import router as archive_router
 from app.routers.ego import router as ego_router
 from app.routers.drift import router as drift_router
 from app.routers.graph import router as graph_router
+from app.routers.relationships import router as relationships_router
 
 app = FastAPI(title="Lucid API", docs_url=None, redoc_url=None)
 
@@ -25,6 +26,7 @@ app.add_middleware(
 app.include_router(gmail_router)
 app.include_router(archive_router)
 app.include_router(graph_router)
+app.include_router(relationships_router)
 app.include_router(ego_router)
 app.include_router(drift_router)
 

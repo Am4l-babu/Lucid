@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -68,26 +67,15 @@ export default function Drift() {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-2xl flex-col px-6 py-16 sm:py-24">
+    <main className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-2xl flex-col px-6 py-12 sm:py-16">
       <header className="mb-12 sm:mb-16">
-        <div className="flex items-baseline gap-3">
-          <h1 className="font-display text-5xl font-medium leading-none tracking-tight">
-            Lucid
-          </h1>
-          <span className="text-[0.7rem] font-medium uppercase tracking-[0.2em] text-faint">
-            Drift
-          </span>
-        </div>
+        <h1 className="font-display text-4xl font-medium leading-none tracking-tight text-ink sm:text-5xl">
+          Drift
+        </h1>
         <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-muted">
           Set what matters to you. Lucid checks whether your days are actually
           moving toward it.
         </p>
-        <Link
-          href="/"
-          className="mt-4 inline-block text-[0.7rem] font-medium uppercase tracking-[0.15em] text-faint transition-colors hover:text-accent"
-        >
-          &larr; Archive
-        </Link>
       </header>
 
       <section>

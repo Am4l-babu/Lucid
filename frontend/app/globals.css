@@ -23,6 +23,7 @@ body {
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Editorial selection */

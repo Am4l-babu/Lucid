@@ -52,8 +52,8 @@
 | Archive — semantic search | 🔄 Ongoing | Atul013 | feature/archive-llm-chat | RAG: vector search + NVIDIA NIM (minimax-m3) |
 | Archive — chat UI | 🔄 Ongoing | Atul013 | feature/archive-llm-chat | Ask-mode answers w/ sources |
 | Archive — voice interface | 📋 Todo | — | — | Whisper STT → piped into Archive query |
-| Ego — analysis job | 📋 Todo | — | — | Scheduled LLM pattern finder |
-| Ego — insights dashboard | 📋 Todo | — | — | Depends on analysis job |
+| Ego — analysis job | 🔄 Ongoing | Atul013 | feature/ego-insights | On-demand LLM pattern finder over archive |
+| Ego — insights dashboard | 🔄 Ongoing | Atul013 | feature/ego-insights | Renders Ego analysis output |
 | Ego — emotion timeline | 📋 Todo | — | — | Sentiment tracking across sources visualized over time |
 | Drift — goals input | 📋 Todo | — | — | User sets goals once |
 | Drift — deviation alerts | 📋 Todo | — | — | Depends on Ego + goals input |
@@ -69,7 +69,7 @@
 | Dashboard layout | 📋 Todo | — | — | Main shell, navigation |
 | Connectors page | 👀 In Review | Atul013 | feature/connectors-onboarding | Connect Gmail + sync flow (first-run onboarding) |
 | Archive chat page | ✅ Done | Atul013 | feature/archive-search-ui | Editorial minimalist search UI over /gmail/search |
-| Ego insights page | 📋 Todo | — | — | |
+| Ego insights page | 🔄 Ongoing | Atul013 | feature/ego-insights | /ego route |
 | Drift goals page | 📋 Todo | — | — | |
 | Relationship Intelligence page | 📋 Todo | — | — | |
 | Emotion Timeline page | 📋 Todo | — | — | Sentiment graph over time |
@@ -97,4 +97,5 @@
 | 2026-06-20 | Atul013 | Decided split deploy (Vercel FE + Azure BE); dockerization deferred |
 | 2026-06-20 | Atul013 | Started Connect Gmail + sync onboarding flow |
 | 2026-06-20 | Atul013 | Started Archive LLM (RAG via NVIDIA NIM) + chat/ask UI |
+| 2026-06-20 | Atul013 | Started Ego analysis job + insights page |
 

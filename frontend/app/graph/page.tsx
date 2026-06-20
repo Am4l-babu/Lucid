@@ -176,13 +176,20 @@ function Constellation({ graph }: { graph: Graph }) {
       (neighbours.get(b.id) ?? neighbours.set(b.id, new Set()).get(b.id)!).add(a.id);
     });
 
+    // Everything scales to canvas width so it looks right on phone and desktop.
+    const scaleNow = () => Math.max(0.55, Math.min(1, W / 720));
+    const baseR = (n: Sim) => 5 + Math.min(10, n.weight ?? 3) * 1.1;
+
     function step() {
       const cx = W / 2;
       const cy = H / 2;
-      // A CIRCULAR region (not the wide canvas) so nodes gather in a round,
-      // organic cluster with generous margins — never a rectangle of edges.
-      const R = Math.min(W, H) / 2 - 64;
+      const scale = scaleNow();
+      // round cluster region, with margin reserved for node + label
+      const R = Math.min(W, H) / 2 - (44 * scale + 22);
+      const MAX = 6;
+
       for (const n of nodes) {
+        n.r = baseR(n) * scale;
         let fx = 0;
         let fy = 0;
         for (const m of nodes) {
@@ -190,24 +197,22 @@ function Constellation({ graph }: { graph: Graph }) {
           const dx = n.x - m.x;
           const dy = n.y - m.y;
           const d2 = dx * dx + dy * dy + 0.01;
-          // short-range repulsion only — keeps nodes from overlapping without
-          // blasting them to the boundary
-          const f = Math.min(40, 900 / d2);
+          // short-range repulsion: only stops overlap, never flings outward
+          const f = Math.min(30, (700 * scale) / d2);
           fx += f * dx;
           fy += f * dy;
         }
-        // firm pull to centre (this is what makes it clump, not spread)
-        fx += (cx - n.x) * 0.03 + (Math.random() - 0.5) * 0.2;
-        fy += (cy - n.y) * 0.03 + (Math.random() - 0.5) * 0.2;
-        n.vx = (n.vx + fx) * 0.88;
-        n.vy = (n.vy + fy) * 0.88;
+        // firm pull to centre is what keeps it a clump, not a scatter
+        fx += (cx - n.x) * 0.045 + (Math.random() - 0.5) * 0.2 * scale;
+        fy += (cy - n.y) * 0.045 + (Math.random() - 0.5) * 0.2 * scale;
+        n.vx = (n.vx + fx) * 0.86;
+        n.vy = (n.vy + fy) * 0.86;
       }
       for (const { a, b } of edges) {
         const dx = b.x - a.x;
         const dy = b.y - a.y;
-        const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
-        // connected nodes pull together into clumps
-        const diff = (d - 70) * 0.04;
+        const d = Math.hypot(dx, dy) || 0.01;
+        const diff = (d - 64 * scale) * 0.04;
         const ux = dx / d;
         const uy = dy / d;
         a.vx += ux * diff;
@@ -216,34 +221,42 @@ function Constellation({ graph }: { graph: Graph }) {
         b.vy -= uy * diff;
       }
       for (const n of nodes) {
+        // clamp speed so a node can never get launched off-screen
+        const sp = Math.hypot(n.vx, n.vy);
+        if (sp > MAX) {
+          n.vx = (n.vx / sp) * MAX;
+          n.vy = (n.vy / sp) * MAX;
+        }
         n.x += n.vx;
         n.y += n.vy;
-        // soft circular containment — a spring, not a wall, so nodes never
-        // line up on a hard edge
+        // hard circular boundary — nothing ever leaves the disc
         const dx = n.x - cx;
         const dy = n.y - cy;
         const dist = Math.hypot(dx, dy) || 0.01;
-        if (dist > R) {
-          const pull = (dist - R) * 0.06;
-          n.vx -= (dx / dist) * pull;
-          n.vy -= (dy / dist) * pull;
+        const limit = R - n.r;
+        if (dist > limit) {
+          n.x = cx + (dx / dist) * limit;
+          n.y = cy + (dy / dist) * limit;
+          n.vx *= -0.3;
+          n.vy *= -0.3;
         }
       }
-    }
-
-    function clip(label: string): string {
-      return label.length > 16 ? label.slice(0, 15).trimEnd() + "…" : label;
     }
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
       const hovered = hoverRef.current;
       const near = hovered ? neighbours.get(hovered) : null;
+      const scale = scaleNow();
+      const fontPx = Math.max(9, Math.round(11 * scale));
+      const maxLabel = scale < 0.72 ? 11 : 16;
+      const trim = (s: string) =>
+        s.length > maxLabel ? s.slice(0, maxLabel - 1).trimEnd() + "…" : s;
 
-      // edges — soft, curved a touch via quadratic toward centre bias
+      // edges
       for (const { a, b } of edges) {
         const active = hovered && (a.id === hovered || b.id === hovered);
-        ctx.globalAlpha = active ? 0.9 : hovered ? 0.15 : 0.4;
+        ctx.globalAlpha = active ? 0.9 : hovered ? 0.12 : 0.38;
         ctx.strokeStyle = active ? COLORS.accent : COLORS.faint;
         ctx.lineWidth = active ? 1.3 : 0.7;
         ctx.beginPath();
@@ -260,31 +273,29 @@ function Constellation({ graph }: { graph: Graph }) {
         const isPerson = n.type === "person";
         const color = isPerson ? COLORS.ink : COLORS.accent;
         const focused = !hovered || n.id === hovered || near?.has(n.id);
-        ctx.globalAlpha = focused ? 1 : 0.28;
+        ctx.globalAlpha = focused ? 1 : 0.25;
 
-        // glow halo
         ctx.shadowColor = color;
-        ctx.shadowBlur = n.id === hovered ? 22 : focused ? 12 : 0;
+        ctx.shadowBlur = (n.id === hovered ? 22 : focused ? 11 : 0) * scale;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // ring accent on people for a little hierarchy
         if (isPerson) {
           ctx.beginPath();
-          ctx.arc(n.x, n.y, n.r + 3, 0, Math.PI * 2);
+          ctx.arc(n.x, n.y, n.r + 3 * scale, 0, Math.PI * 2);
           ctx.strokeStyle = color;
           ctx.globalAlpha = focused ? 0.25 : 0.1;
           ctx.lineWidth = 1;
           ctx.stroke();
-          ctx.globalAlpha = focused ? 1 : 0.28;
+          ctx.globalAlpha = focused ? 1 : 0.25;
         }
 
-        ctx.font = `${isPerson ? 600 : 500} 11px "Hanken Grotesk", sans-serif`;
+        ctx.font = `${isPerson ? 600 : 500} ${fontPx}px "Hanken Grotesk", sans-serif`;
         ctx.fillStyle = color;
-        ctx.fillText(clip(n.label), n.x, n.y + n.r + 11);
+        ctx.fillText(trim(n.label), n.x, n.y + n.r + fontPx);
         ctx.globalAlpha = 1;
       }
     }

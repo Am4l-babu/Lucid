@@ -7,3 +7,4 @@ node_modules/
 chroma_data/
 tokens.json
 ego_insights.json
+goals.json

@@ -66,7 +66,7 @@
 |---|---|---|---|---|
 | Dashboard layout | 📋 Todo | — | — | Main shell, navigation |
 | Connectors page | 📋 Todo | — | — | Connect/disconnect data sources |
-| Archive chat page | 📋 Todo | — | — | |
+| Archive chat page | 🔄 Ongoing | Atul013 | feature/archive-search-ui | Editorial minimalist search UI over /gmail/search |
 | Ego insights page | 📋 Todo | — | — | |
 | Drift goals page | 📋 Todo | — | — | |
 | Relationship Intelligence page | 📋 Todo | — | — | |

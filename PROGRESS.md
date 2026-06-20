@@ -67,7 +67,7 @@
 | Component | Status | Assigned To | Branch | Notes |
 |---|---|---|---|---|
 | Dashboard layout | 📋 Todo | — | — | Main shell, navigation |
-| Connectors page | 📋 Todo | — | — | Connect/disconnect data sources |
+| Connectors page | 🔄 Ongoing | Atul013 | feature/connectors-onboarding | Connect Gmail + sync flow (first-run onboarding) |
 | Archive chat page | 🔄 Ongoing | Atul013 | feature/archive-search-ui | Editorial minimalist search UI over /gmail/search |
 | Ego insights page | 📋 Todo | — | — | |
 | Drift goals page | 📋 Todo | — | — | |
@@ -95,4 +95,5 @@
 | 2026-06-16 | Atul013 | Started Gmail connector |
 | 2026-06-16 | Atul013 | Started ChromaDB setup + ingestion pipeline |
 | 2026-06-20 | Atul013 | Decided split deploy (Vercel FE + Azure BE); dockerization deferred |
+| 2026-06-20 | Atul013 | Started Connect Gmail + sync onboarding flow |
 

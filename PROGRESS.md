@@ -51,14 +51,14 @@
 |---|---|---|---|---|
 | Archive — semantic search | 🔄 Ongoing | Atul013 | feature/archive-llm-chat | RAG: vector search + NVIDIA NIM (minimax-m3) |
 | Archive — chat UI | 🔄 Ongoing | Atul013 | feature/archive-llm-chat | Ask-mode answers w/ sources |
-| Archive — voice interface | 📋 Todo | — | — | Whisper STT → piped into Archive query |
+| Archive — voice interface | 🔄 Ongoing | Atul013 | feature/archive-voice | Browser-native speech → Archive query (no key) |
 | Ego — analysis job | 🔄 Ongoing | Atul013 | feature/ego-insights | On-demand LLM pattern finder over archive |
 | Ego — insights dashboard | 🔄 Ongoing | Atul013 | feature/ego-insights | Renders Ego analysis output |
-| Ego — emotion timeline | 📋 Todo | — | — | Sentiment tracking across sources visualized over time |
+| Ego — emotion timeline | 🔄 Ongoing | Atul013 | feature/emotion-timeline | LLM sentiment per day → SVG timeline |
 | Drift — goals input | 🔄 Ongoing | Atul013 | feature/drift-goals | User sets goals once |
 | Drift — deviation alerts | 🔄 Ongoing | Atul013 | feature/drift-goals | LLM aligns goals vs archive activity |
-| Relationship Intelligence | 📋 Todo | — | — | 4th AI layer — tracks how relationships evolve over time across sources |
-| Morning Briefing | 📋 Todo | — | — | Telegram bot delivers daily AI-generated briefing from Archive + Ego + Drift |
+| Relationship Intelligence | 🔄 Ongoing | Atul013 | feature/relationship-intelligence | LLM over top senders → relationship notes |
+| Morning Briefing | 🔄 Ongoing | Atul013 | feature/morning-briefing | LLM briefing (Archive+Ego+Drift) + Today view; Telegram delivery deferred (needs bot token) |
 
 ---
 
@@ -71,9 +71,9 @@
 | Archive chat page | ✅ Done | Atul013 | feature/archive-search-ui | Editorial minimalist search UI over /gmail/search |
 | Ego insights page | 🔄 Ongoing | Atul013 | feature/ego-insights | /ego route |
 | Drift goals page | 🔄 Ongoing | Atul013 | feature/drift-goals | /drift route |
-| Relationship Intelligence page | 📋 Todo | — | — | |
-| Emotion Timeline page | 📋 Todo | — | — | Sentiment graph over time |
-| Visual Knowledge Graph | 📋 Todo | — | — | Animated constellation of topics/people/connections — expo showstopper |
+| Relationship Intelligence page | 🔄 Ongoing | Atul013 | feature/relationship-intelligence | /relationships route |
+| Emotion Timeline page | 🔄 Ongoing | Atul013 | feature/emotion-timeline | /timeline route |
+| Visual Knowledge Graph | 🔄 Ongoing | Atul013 | feature/knowledge-graph | Animated force-directed constellation (canvas) |
 
 ---
 
@@ -82,7 +82,7 @@
 | Component | Status | Assigned To | Branch | Notes |
 |---|---|---|---|---|
 | UI polish | 📋 Todo | — | — | |
-| Expo demo prep | 📋 Todo | — | — | Script + mock data |
+| Expo demo prep | 🔄 Ongoing | Atul013 | feature/expo-prep | Demo script + mock-data seed + deployment guide |
 
 ---
 
@@ -100,4 +100,5 @@
 | 2026-06-20 | Atul013 | Started Ego analysis job + insights page |
 | 2026-06-20 | Atul013 | Started Drift goals input + alignment check |
 | 2026-06-20 | Atul013 | Started Dashboard layout (shared nav) |
+| 2026-06-20 | Atul013 | Batch: voice, knowledge graph, relationships, emotion timeline, briefing, expo prep |
 

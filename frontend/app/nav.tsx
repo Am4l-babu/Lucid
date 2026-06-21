@@ -32,9 +32,10 @@ export default function Nav() {
 
         <span className="h-5 w-px shrink-0 bg-line-2" aria-hidden="true" />
 
-        <div className="flex items-center gap-0.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* min-w-0 lets this scroll on mobile instead of widening the page */}
+        <div className="flex min-w-0 items-center gap-0.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {LINKS.map((l) => {
-            const active = pathname.startsWith(l.href);
+            const active = pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href));
             return (
               <Link
                 key={l.href}

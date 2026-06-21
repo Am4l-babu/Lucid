@@ -1,0 +1,5 @@
+2026/06/21-11:19:02.377 4290 Creating DB E:\Projects\lucid\backend\whatsapp_service\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb since it was missing.
+2026/06/21-11:19:02.401 4290 Reusing MANIFEST E:\Projects\lucid\backend\whatsapp_service\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/06/21-11:20:18.629 4290 Level-0 table #5: started
+2026/06/21-11:20:18.657 4290 Level-0 table #5: 1061906 bytes OK
+2026/06/21-11:20:18.659 4290 Delete type=0 #3

@@ -29,11 +29,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
     if (pageRef.current) {
       tl.from(
         pageRef.current,
-        { opacity: 0, y: 22, duration: 0.7 },
+        { opacity: 0, y: 22, duration: 0.7, clearProps: "opacity,transform" },
         0.15,
       );
     }
     return () => {
+      // Complete the timeline before killing so inline styles are cleared
+      tl.progress(1);
       tl.kill();
     };
   }, []);

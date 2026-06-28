@@ -36,7 +36,7 @@
 |---|---|---|---|---|
 | WhatsApp (`whatsapp-web.js`) | 🔄 Ongoing | Atul013 | feature/whatsapp-connector | Node.js microservice bridge; spare SIM Business account set up |
 | Gmail | ✅ Done | Atul013 | feature/gmail-connector | Gmail API + Google OAuth + sync |
-| Telegram | 📋 Todo | — | — | Official Telegram API — dual role: data source + briefing output channel |
+| Telegram | 🔄 Ongoing | Atul013 | feature/telegram-connector | Official Telegram API — dual role: data source + briefing output channel |
 | Google Keep | 📋 Todo | — | — | Google API |
 | Notion | 📋 Todo | — | — | Notion API |
 | Discord | 📋 Todo | — | — | Discord bot API |
@@ -95,6 +95,8 @@
 | 2026-06-16 | Atul013 | Started project setup & folder structure |
 | 2026-06-16 | Atul013 | Started Gmail connector |
 | 2026-06-16 | Atul013 | Started ChromaDB setup + ingestion pipeline |
+| 2026-06-28 | Atul013 | Opened PR #22 (connectors page) → development |
+| 2026-06-28 | Atul013 | Started Telegram connector |
 | 2026-06-20 | Atul013 | Decided split deploy (Vercel FE + Azure BE); dockerization deferred |
 | 2026-06-20 | Atul013 | UI polish — mobile-safe nav |
 | 2026-06-20 | Atul013 | Started Connect Gmail + sync onboarding flow |

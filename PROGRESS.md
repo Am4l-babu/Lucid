@@ -38,7 +38,7 @@
 | Gmail | ✅ Done | Atul013 | feature/gmail-connector | Gmail API + Google OAuth + sync |
 | Telegram | 🔄 Ongoing | Atul013 | feature/telegram-connector | Official Telegram API — dual role: data source + briefing output channel |
 | Financial data (mock CSV) | 👀 In Review | Am4l-babu | feature/financial-ingestion | Bank-statement CSV parser → categorize spending → ChromaDB (PR #23) |
-| Health data (mock smartwatch JSON) | 📋 Todo | Am4l-babu | — | Sleep, HRV, steps → ChromaDB; correlate with sentiment |
+| Health data (mock smartwatch JSON) | 🔄 Ongoing | Am4l-babu | feature/health-ingestion | Sleep, HRV, steps → ChromaDB; correlate with sentiment |
 | Google Keep | 📋 Todo | — | — | Google API |
 | Notion | 📋 Todo | — | — | Notion API |
 | Discord | 📋 Todo | — | — | Discord bot API |
@@ -128,4 +128,5 @@
 | 2026-07-02 | Am4l-babu | Started financial data connector (mock CSV ingestion) |
 | 2026-07-02 | Am4l-babu | Opened PR #23 (financial ingestion) → development |
 | 2026-07-02 | Am4l-babu | Added digital-twin roadmap: ROADMAP.md, PLAN.md + new planned components |
+| 2026-07-02 | Am4l-babu | Started health data connector (mock smartwatch JSON) |
 

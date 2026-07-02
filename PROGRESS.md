@@ -38,6 +38,7 @@
 | Gmail | ✅ Done | Atul013 | feature/gmail-connector | Gmail API + Google OAuth + sync |
 | Telegram | 🔄 Ongoing | Atul013 | feature/telegram-connector | Official Telegram API — dual role: data source + briefing output channel |
 | Financial data (mock CSV) | 👀 In Review | Am4l-babu | feature/financial-ingestion | Bank-statement CSV parser → categorize spending → ChromaDB (PR #23) |
+| Health data (mock smartwatch JSON) | 📋 Todo | Am4l-babu | — | Sleep, HRV, steps → ChromaDB; correlate with sentiment |
 | Google Keep | 📋 Todo | — | — | Google API |
 | Notion | 📋 Todo | — | — | Notion API |
 | Discord | 📋 Todo | — | — | Discord bot API |
@@ -60,6 +61,22 @@
 | Drift — deviation alerts | 🔄 Ongoing | Atul013 | feature/drift-goals | LLM aligns goals vs archive activity |
 | Relationship Intelligence | 🔄 Ongoing | Atul013 | feature/relationship-intelligence | LLM over top senders → relationship notes |
 | Morning Briefing | 🔄 Ongoing | Atul013 | feature/morning-briefing | LLM briefing (Archive+Ego+Drift) + Today view; Telegram delivery deferred (needs bot token) |
+
+---
+
+## Digital Twin Track
+
+> Long-range phases from [ROADMAP.md](ROADMAP.md); working plan in [PLAN.md](PLAN.md). Software phases first — hardware waits.
+
+| Component | Status | Assigned To | Branch | Notes |
+|---|---|---|---|---|
+| Malayalam/Manglish sentiment | 📋 Todo | Am4l-babu | — | Indic-transformer sentiment over archive text; feeds emotion timeline |
+| Digital Twin — simulation engine | 📋 Todo | Am4l-babu | — | simulate_workload(): goal-drift/stress probability from calendar + health history |
+| Autonomous agent loop | 📋 Todo | — | — | LangChain tool-use: draft follow-ups, calendar optimization |
+| SNN tripwire | 📋 Todo | — | — | LIF/Norse spiking net over temporal metadata; wakes LLM on anomaly |
+| Edge deployment (Pi Zero 2 W) | 📋 Todo | — | — | FastAPI + ChromaDB on Pi, low-RAM tuning |
+| ESP32 environment nodes | 📋 Todo | — | — | BME680 + mic dB via MQTT → productivity correlation |
+| FOV camera + assistive interaction | 📋 Todo | — | — | MediaPipe posture/presence; faster-whisper offline STT; sign language |
 
 ---
 
@@ -110,4 +127,5 @@
 | 2026-06-21 | Atul013 | Started WhatsApp connector (Node.js bridge, Business account on spare SIM) |
 | 2026-07-02 | Am4l-babu | Started financial data connector (mock CSV ingestion) |
 | 2026-07-02 | Am4l-babu | Opened PR #23 (financial ingestion) → development |
+| 2026-07-02 | Am4l-babu | Added digital-twin roadmap: ROADMAP.md, PLAN.md + new planned components |
 

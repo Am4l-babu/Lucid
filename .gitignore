@@ -6,6 +6,7 @@ node_modules/
 .next/
 chroma_data/
 chroma_mock_db.json
+finance_mock_db.json
 tokens.json
 ego_insights.json
 goals.json

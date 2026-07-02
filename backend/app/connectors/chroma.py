@@ -77,6 +77,39 @@ if MOCK_MODE:
     def sample(limit: int = 60) -> list[dict]:
         return _read_db()[:limit]
 
+    FINANCE_MOCK_FILE = Path("finance_mock_db.json")
+
+    def _read_finance_db() -> list[dict]:
+        if FINANCE_MOCK_FILE.exists():
+            try:
+                return json.loads(FINANCE_MOCK_FILE.read_text(encoding="utf-8"))
+            except Exception:
+                return []
+        return []
+
+    def _write_finance_db(data: list[dict]):
+        FINANCE_MOCK_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    def ingest_transactions(txns: list[dict]) -> int:
+        if not txns:
+            return 0
+        db = {t["id"]: t for t in _read_finance_db()}
+        for t in txns:
+            db[t["id"]] = {**t, "text": f"{t['date']} {t['description']} {t['category']}"}
+        _write_finance_db(list(db.values()))
+        return len(txns)
+
+    def search_transactions(query: str, n_results: int = 10) -> list[dict]:
+        db = _read_finance_db()
+        q_words = [w.lower() for w in query.split() if len(w) > 2] or [query.lower()]
+        scored = [(sum(1 for qw in q_words if qw in t["text"].lower()), t) for t in db]
+        scored.sort(key=lambda x: x[0], reverse=True)
+        results = [t for score, t in scored if score > 0] or [t for _, t in scored]
+        return results[:n_results]
+
+    def all_transactions() -> list[dict]:
+        return _read_finance_db()
+
 else:
     _CLIENT = chromadb.PersistentClient(path=os.getenv("CHROMA_PATH", "chroma_data"))
 
@@ -114,4 +147,34 @@ else:
             {"text": d, **m}
             for d, m in zip(data["documents"], data["metadatas"])
         ]
+
+    def _transactions():
+        return _CLIENT.get_or_create_collection("transactions")
+
+    def ingest_transactions(txns: list[dict]) -> int:
+        if not txns:
+            return 0
+        _transactions().upsert(
+            ids=[t["id"] for t in txns],
+            documents=[f"{t['date']} {t['description']} {t['category']}" for t in txns],
+            metadatas=[{
+                "date": t["date"],
+                "description": t["description"],
+                "amount": t["amount"],
+                "type": t["type"],
+                "category": t["category"],
+            } for t in txns],
+        )
+        return len(txns)
+
+    def search_transactions(query: str, n_results: int = 10) -> list[dict]:
+        results = _transactions().query(query_texts=[query], n_results=n_results)
+        docs = results["documents"][0]
+        metas = results["metadatas"][0]
+        return [{"text": d, **m} for d, m in zip(docs, metas)]
+
+    def all_transactions() -> list[dict]:
+        """Every transaction, for summary/insight jobs (not a query)."""
+        data = _transactions().get(include=["metadatas"])
+        return list(data["metadatas"])
 

@@ -1,0 +1,19 @@
+{
+  "description": "Mock code-mixed Malayalam/Manglish chat messages for the sentiment demo — a week of messages from Maya's college group chat.",
+  "messages": [
+    { "date": "2026-06-26", "from": "Anju", "text": "Machane launch kandu! Adipoli aayittundu, valare nannayi" },
+    { "date": "2026-06-26", "from": "Rahul", "text": "Kidilan launch! Ellavarum parayunnu super aanu ennu" },
+    { "date": "2026-06-26", "from": "Maya", "text": "Thanks da, othiri santhosham. Team full effort aayirunnu" },
+    { "date": "2026-06-27", "from": "Anju", "text": "Innu evide? Beach il pokam, nalla weather aanu" },
+    { "date": "2026-06-27", "from": "Maya", "text": "Varam! Kure naal aayi break eduthittu, ippo sugham thonnunnu" },
+    { "date": "2026-06-27", "from": "Rahul", "text": "ഇന്നത്തെ ദിവസം അടിപൊളി ആയിരുന്നു, ഒത്തിരി സന്തോഷം" },
+    { "date": "2026-06-28", "from": "Maya", "text": "Server down aayi, full pani. Deshyam varunnu" },
+    { "date": "2026-06-28", "from": "Anju", "text": "Ayyo kashtam. Tension edukkanda, sheriyakum" },
+    { "date": "2026-06-28", "from": "Maya", "text": "Onnum sheriyavunnilla, ellam waste aayi thonnunnu. Ksheenam" },
+    { "date": "2026-06-29", "from": "Rahul", "text": "Innu engane undu? Prashnam theernno?" },
+    { "date": "2026-06-29", "from": "Maya", "text": "Kurachu bhedam undu, pakshe full sheriyayittilla. Boradi aanu" },
+    { "date": "2026-06-30", "from": "Maya", "text": "Fix aayi! Ella users um thirichu vannu, valare santhosham" },
+    { "date": "2026-06-30", "from": "Anju", "text": "കൊള്ളാം! നല്ലത് കേൾക്കാൻ. celebrate cheyyam" },
+    { "date": "2026-06-30", "from": "Rahul", "text": "Pwoli! Ithu vere level aanu machane, congrats" }
+  ]
+}

@@ -38,7 +38,7 @@
 | Gmail | ✅ Done | Atul013 | feature/gmail-connector | Gmail API + Google OAuth + sync |
 | Telegram | 🔄 Ongoing | Atul013 | feature/telegram-connector | Official Telegram API — dual role: data source + briefing output channel |
 | Financial data (mock CSV) | 👀 In Review | Am4l-babu | feature/financial-ingestion | Bank-statement CSV parser → categorize spending → ChromaDB (PR #23) |
-| Health data (mock smartwatch JSON) | 🔄 Ongoing | Am4l-babu | feature/health-ingestion | Sleep, HRV, steps → ChromaDB; correlate with sentiment |
+| Health data (mock smartwatch JSON) | 👀 In Review | Am4l-babu | feature/health-ingestion | Sleep, HRV, steps → ChromaDB + sentiment correlation (PR #25) |
 | Google Keep | 📋 Todo | — | — | Google API |
 | Notion | 📋 Todo | — | — | Notion API |
 | Discord | 📋 Todo | — | — | Discord bot API |
@@ -70,7 +70,7 @@
 
 | Component | Status | Assigned To | Branch | Notes |
 |---|---|---|---|---|
-| Malayalam/Manglish sentiment | 📋 Todo | Am4l-babu | — | Indic-transformer sentiment over archive text; feeds emotion timeline |
+| Malayalam/Manglish sentiment | 🔄 Ongoing | Am4l-babu | feature/malayalam-sentiment | Indic-transformer sentiment over archive text; feeds emotion timeline |
 | Digital Twin — simulation engine | 📋 Todo | Am4l-babu | — | simulate_workload(): goal-drift/stress probability from calendar + health history |
 | Autonomous agent loop | 📋 Todo | — | — | LangChain tool-use: draft follow-ups, calendar optimization |
 | SNN tripwire | 📋 Todo | — | — | LIF/Norse spiking net over temporal metadata; wakes LLM on anomaly |
@@ -129,4 +129,6 @@
 | 2026-07-02 | Am4l-babu | Opened PR #23 (financial ingestion) → development |
 | 2026-07-02 | Am4l-babu | Added digital-twin roadmap: ROADMAP.md, PLAN.md + new planned components |
 | 2026-07-02 | Am4l-babu | Started health data connector (mock smartwatch JSON) |
+| 2026-07-02 | Am4l-babu | Opened PR #25 (health ingestion) → development |
+| 2026-07-02 | Am4l-babu | Started Malayalam/Manglish sentiment module |
 

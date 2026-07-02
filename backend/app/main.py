@@ -14,6 +14,7 @@ from app.routers.graph import router as graph_router
 from app.routers.relationships import router as relationships_router
 from app.routers.timeline import router as timeline_router
 from app.routers.briefing import router as briefing_router
+from app.routers.sentiment import router as sentiment_router
 from app.routers.health import router as health_router
 from app.routers.finance import router as finance_router
 
@@ -35,6 +36,7 @@ app.include_router(timeline_router)
 app.include_router(briefing_router)
 app.include_router(ego_router)
 app.include_router(drift_router)
+app.include_router(sentiment_router)
 app.include_router(health_router)
 app.include_router(finance_router)
 

@@ -5,6 +5,7 @@ __pycache__/
 node_modules/
 .next/
 chroma_data/
+chroma_mock_db.json
 tokens.json
 ego_insights.json
 goals.json

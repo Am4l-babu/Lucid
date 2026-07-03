@@ -21,14 +21,17 @@ from app.routers.finance import router as finance_router
 from app.routers.telegram import router as telegram_router
 from app.routers.todos import router as todos_router
 from app.connectors import telegram as telegram_connector
+from app.connectors import reminders
 
 app = FastAPI(title="Lucid API", docs_url=None, redoc_url=None)
 
 
 @app.on_event("startup")
-def start_telegram_bot():
-    # Resume the live Telegram bot (todo commands + archiving) if connected.
+def start_background_workers():
+    # Resume the live Telegram bot (todo commands + archiving) if connected,
+    # and the reminder scheduler that fires due todo reminders.
     telegram_connector.start_poller()
+    reminders.start()
 
 app.add_middleware(
     CORSMiddleware,

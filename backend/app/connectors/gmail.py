@@ -8,6 +8,7 @@ from googleapiclient.discovery import build
 
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.send",
     "https://www.googleapis.com/auth/calendar.readonly",
 ]
 TOKENS_FILE = Path("tokens.json")
@@ -82,6 +83,26 @@ def fetch_emails(max_results: int = 100) -> list[dict]:
             "snippet": full.get("snippet", ""),
         })
     return emails
+
+
+def send_to_self(subject: str, body: str):
+    """Email the connected account's own address — used for todo reminders.
+    Requires the gmail.send scope (reconnect Google if authorized before it
+    was added)."""
+    import base64
+    from email.mime.text import MIMEText
+
+    creds = load_creds()
+    if creds is None:
+        raise RuntimeError("Google not connected")
+    service = build("gmail", "v1", credentials=creds)
+    me = service.users().getProfile(userId="me").execute()["emailAddress"]
+    msg = MIMEText(body)
+    msg["to"] = me
+    msg["from"] = me
+    msg["subject"] = subject
+    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
+    service.users().messages().send(userId="me", body={"raw": raw}).execute()
 
 
 def _save_creds(creds: Credentials):
